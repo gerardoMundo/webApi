@@ -10,6 +10,6 @@ namespace WebApi.Entities
         [StringLength(maximumLength:250)]
         public string Title { get; set; }
         public List<Comment> Comments { get; set; }
-        public List<Authors> Authors { get; set; }
+        public List<AuthorsBooks> Authors { get; set; }
     }
 }

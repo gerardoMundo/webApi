@@ -7,5 +7,6 @@ namespace WebApi.DTOs
         [Required]
         [StringLength(maximumLength: 250)]
         public string Title { get; set; }
+        public List<int> AuthorsIds { get; set; }
     }
 }

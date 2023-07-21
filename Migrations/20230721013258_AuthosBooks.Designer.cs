@@ -11,8 +11,8 @@ using WebApi.DBContext;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230718033310_Authors")]
-    partial class Authors
+    [Migration("20230721013258_AuthosBooks")]
+    partial class AuthosBooks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,9 +42,9 @@ namespace WebApi.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("WebApi.Entities.Authors", b =>
+            modelBuilder.Entity("WebApi.Entities.AuthorsBooks", b =>
                 {
-                    b.Property<int>("Bookid")
+                    b.Property<int>("BooksId")
                         .HasColumnType("int");
 
                     b.Property<int>("AuthorId")
@@ -53,7 +53,7 @@ namespace WebApi.Migrations
                     b.Property<int>("Sort")
                         .HasColumnType("int");
 
-                    b.HasKey("Bookid", "AuthorId");
+                    b.HasKey("BooksId", "AuthorId");
 
                     b.HasIndex("AuthorId");
 
@@ -99,23 +99,23 @@ namespace WebApi.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("WebApi.Entities.Authors", b =>
+            modelBuilder.Entity("WebApi.Entities.AuthorsBooks", b =>
                 {
-                    b.HasOne("WebApi.Entities.Author", "Author")
+                    b.HasOne("WebApi.Entities.Author", "Authors")
                         .WithMany("Authors")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApi.Entities.Books", "Book")
+                    b.HasOne("WebApi.Entities.Books", "Books")
                         .WithMany("Authors")
-                        .HasForeignKey("Bookid")
+                        .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.Navigation("Authors");
 
-                    b.Navigation("Book");
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("WebApi.Entities.Comment", b =>

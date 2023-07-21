@@ -13,12 +13,12 @@ namespace WebApi.DBContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Authors>().HasKey(authors => new { authors.Bookid, authors.AuthorId } );// combinación de llaves
+            modelBuilder.Entity<AuthorsBooks>().HasKey(ab => new { ab.BooksId, ab.AuthorId } );// combinación de llaves
         }
 
         public DbSet<Author> Authors { get; set; }
         public DbSet<Books> Books { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Authors> AuthorsBooks { get; set; }
+        public DbSet<AuthorsBooks> AuthorsBooks { get; set; }
     }
 }

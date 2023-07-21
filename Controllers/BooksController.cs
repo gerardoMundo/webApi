@@ -38,8 +38,17 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(BookDTO bookDTO)
         {
-            var book = mapper.Map<Books>(bookDTO);
+            if (bookDTO.AuthorsIds == null) { return BadRequest("No se puede agregar un libro sin autor"); }
 
+            var authorsIds = await context.Authors.Where(authorBD => bookDTO.AuthorsIds.Contains(authorBD.Id)
+            ).Select(author => author.Id).ToListAsync();
+
+            if(authorsIds.Count != bookDTO.AuthorsIds.Count)
+            {
+                return BadRequest("No existe uno de los autores enviados");
+            }
+
+            var book = mapper.Map<Books>(bookDTO);
             context.Add(book);
             await context.SaveChangesAsync();
             return Ok(book);
