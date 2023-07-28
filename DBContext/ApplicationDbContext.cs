@@ -12,8 +12,8 @@ namespace WebApi.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<AuthorsBooks>().HasKey(ab => new { ab.AuthorId, ab.BooksId } );// combinación de llaves
 
-            modelBuilder.Entity<AuthorsBooks>().HasKey(ab => new { ab.BooksId, ab.AuthorId } );// combinación de llaves
         }
 
         public DbSet<Author> Authors { get; set; }

@@ -11,7 +11,7 @@ namespace WebApi.Entities
         [IsFirstLetterUppercase] // Validación personalizada
         [StringLength(maximumLength:120, ErrorMessage = "El campo {0} debe tener máximo: {1} caracteres.")]
         public string Name { get; set; }
-        public List<AuthorsBooks> Authors { get; set; }
+        public List<AuthorsBooks> AuthorsBooks { get; set; }
 
     }
 }

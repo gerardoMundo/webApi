@@ -5,7 +5,7 @@
 namespace WebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AuthosBooks : Migration
+    public partial class AuthorsBooks : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,7 +46,7 @@ namespace WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuthorsBooks", x => new { x.BooksId, x.AuthorId });
+                    table.PrimaryKey("PK_AuthorsBooks", x => new { x.AuthorId, x.BooksId });
                     table.ForeignKey(
                         name: "FK_AuthorsBooks_Authors_AuthorId",
                         column: x => x.AuthorId,
@@ -82,9 +82,9 @@ namespace WebApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthorsBooks_AuthorId",
+                name: "IX_AuthorsBooks_BooksId",
                 table: "AuthorsBooks",
-                column: "AuthorId");
+                column: "BooksId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_BooksId",
