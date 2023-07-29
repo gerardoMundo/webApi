@@ -7,7 +7,6 @@ namespace WebApi.DTOs
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<AuthorWithID> Authors { get; set; }
         //public List<CommentWithID> Comments { get; set; }
     }
 }

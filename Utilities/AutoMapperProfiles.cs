@@ -10,17 +10,37 @@ namespace WebApi.Utilities
         {
             CreateMap<AuthorDTO, Author>();
             CreateMap<Author, AuthorWithID>();
+            CreateMap<Author, AuthorDTOWithBooks>()
+                .ForMember(author => author.Books, options => options.MapFrom(MapAuthorsWithBooks));
 
             CreateMap<BookDTO, Books>()// para solicitudes post
                 .ForMember(book => book.AuthorsBooks, options => options.MapFrom(MapAuthors));
             // para método get
-            CreateMap<Books, BookWithID>()
+            CreateMap<Books, BookWithID>();
+            CreateMap<Books, BookDTOWithAuthors>()
                 .ForMember(bookWithID => bookWithID.Authors, options => options.MapFrom(MapBookWithID));            
 
             CreateMap<CommentDTO, Comment>();
             CreateMap<Comment, CommentWithID>();
         }
 
+        private List<BookWithID> MapAuthorsWithBooks(Author author, AuthorWithID authorWithID)
+        {
+            var result = new List<BookWithID>();
+
+            if(author.AuthorsBooks == null) { return result; }
+
+            foreach (var authorBook in author.AuthorsBooks)
+            {
+                result.Add(new BookWithID()
+                {
+                    Id = authorBook.BooksId,
+                    Title = authorBook.Books.Title,
+                });
+            }
+
+            return result;
+        }
         private List<AuthorWithID> MapBookWithID(Books books, BookWithID bookWithID)
         {
             var result = new List<AuthorWithID>();

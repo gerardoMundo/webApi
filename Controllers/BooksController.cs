@@ -20,15 +20,17 @@ namespace WebApi.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<BookWithID>> Get(int id)
+        [HttpGet("{id:int}", Name = "getBookByID")]
+        public async Task<ActionResult<BookDTOWithAuthors>> Get(int id)
         {
             var book = await context.Books
                 .Include(bookBD => bookBD.AuthorsBooks)
                 .ThenInclude(authorsBooksBD => authorsBooksBD.Authors)
                 .FirstOrDefaultAsync(bookBD => bookBD.Id == id);
+
+            book.AuthorsBooks = book.AuthorsBooks.OrderBy(x => x.Sort).ToList();
             
-            return mapper.Map<BookWithID>(book);
+            return mapper.Map<BookDTOWithAuthors>(book);
         }
 
         [HttpGet]
@@ -63,7 +65,10 @@ namespace WebApi.Controllers
 
             context.Add(book);
             await context.SaveChangesAsync();
-            return Ok(book);
+
+            var bookWithId = mapper.Map<BookWithID>(book);
+
+            return CreatedAtRoute("getBookByID", new {book.Id}, bookWithId);
         }
     }
 }
