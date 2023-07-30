@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using WebApi.DBContext;
 using WebApi.DTOs;
 using WebApi.Entities;
@@ -64,6 +63,29 @@ namespace WebApi.Controllers
             var commentWithId = mapper.Map<CommentWithID>(comment);
 
             return CreatedAtRoute("getCommentByID", new { bookId, comment.Id }, commentWithId);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(int bookId, int id, CommentDTO commentDTO) 
+        {
+            var bookExist = await context.Books.AnyAsync(bookDB => bookDB.Id == bookId);
+
+            if (!bookExist)
+            {
+                return NotFound();
+            }
+
+            var commentExiste = await context.Comments.AnyAsync(commentDB => commentDB.Id == id);
+
+            if (!commentExiste) { return NotFound(); }
+
+            var comment = mapper.Map<Comment>(commentDTO);
+            comment.BooksId = bookId;
+            comment.Id = id;
+            context.Update(comment);
+            await context.SaveChangesAsync();
+            return NoContent();
+
         }
     }
 }

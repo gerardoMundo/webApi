@@ -84,23 +84,20 @@ namespace WebApi.Controllers
 
         
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Author author, int id)
+        public async Task<ActionResult> Put(AuthorDTO authorDTO, int id)
         {
-            var exists = context.Authors.AnyAsync(author => author.Id == id);
+            var exist = await context.Authors.AnyAsync(author => author.Id == id);
 
-            if (!await exists)
+            if (!exist)
             {
                 return NotFound();
             }
 
-            if (author.Id != id)
-            {
-                return BadRequest("El autor no coincide con el Id proporcionado");
-            }
-
+            var author = mapper.Map<Author>(authorDTO);
+            author.Id = id;
             context.Update(author);
             await context.SaveChangesAsync();
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id:int}")]
