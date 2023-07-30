@@ -11,5 +11,6 @@ namespace WebApi.Entities
         public string Title { get; set; }
         public List<Comment> Comments { get; set; }
         public List<AuthorsBooks> AuthorsBooks { get; set; }
+        public DateTime? PublishedDate { get; set; }
     }
 }

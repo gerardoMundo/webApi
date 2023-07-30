@@ -18,7 +18,8 @@ namespace WebApi.Utilities
             // para método get
             CreateMap<Books, BookWithID>();
             CreateMap<Books, BookDTOWithAuthors>()
-                .ForMember(bookWithID => bookWithID.Authors, options => options.MapFrom(MapBookWithID));            
+                .ForMember(bookWithID => bookWithID.Authors, options => options.MapFrom(MapBookWithID));
+            CreateMap<BookPatchDTO, Books>().ReverseMap();
 
             CreateMap<CommentDTO, Comment>();
             CreateMap<Comment, CommentWithID>();

@@ -23,7 +23,7 @@ namespace WebApi
             {
                 options.Filters.Add(typeof(FilterException));
             }).AddJsonOptions(x =>
-            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 
             services.AddEndpointsApiExplorer();
 
