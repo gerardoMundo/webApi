@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gerar\\Desktop\\C-Sharp\\WebApi\\WebApi.csproj": {}
+    "C:\\Users\\gerar\\OneDrive\\Escritorio\\Dotnet projects\\webApi\\WebApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gerar\\Desktop\\C-Sharp\\WebApi\\WebApi.csproj": {
+    "C:\\Users\\gerar\\OneDrive\\Escritorio\\Dotnet projects\\webApi\\WebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gerar\\Desktop\\C-Sharp\\WebApi\\WebApi.csproj",
+        "projectUniqueName": "C:\\Users\\gerar\\OneDrive\\Escritorio\\Dotnet projects\\webApi\\WebApi.csproj",
         "projectName": "WebApi",
-        "projectPath": "C:\\Users\\gerar\\Desktop\\C-Sharp\\WebApi\\WebApi.csproj",
+        "projectPath": "C:\\Users\\gerar\\OneDrive\\Escritorio\\Dotnet projects\\webApi\\WebApi.csproj",
         "packagesPath": "C:\\Users\\gerar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gerar\\Desktop\\C-Sharp\\WebApi\\obj\\",
+        "outputPath": "C:\\Users\\gerar\\OneDrive\\Escritorio\\Dotnet projects\\webApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gerar\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -47,6 +48,10 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.20, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
@@ -90,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }
