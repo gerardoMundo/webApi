@@ -24,7 +24,7 @@ namespace WebApi.Controllers
             this.signInManager = signInManager;
         }
 
-        [HttpGet]
+        [HttpPost("register")]
         public async Task<ActionResult<AuthenticationResponse>> Register(UserCredentials userCredentials)
         {
             var user = new IdentityUser { UserName = userCredentials.Email, Email = userCredentials.Email };
@@ -40,6 +40,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [HttpPost("login")]
         public async Task<ActionResult<AuthenticationResponse>> Login(UserCredentials userCredentials)
         {
             var result = await signInManager.PasswordSignInAsync(userCredentials.Email, userCredentials.Password,
@@ -61,14 +62,14 @@ namespace WebApi.Controllers
                 new Claim("Email", userCredentials.Email) 
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwtkey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.Aes128CbcHmacSha256);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var expiration = DateTime.UtcNow.AddYears(1);
 
             var securityToken = new JwtSecurityToken(issuer: null, audience: null, 
                                     claims: claims, expires: expiration, signingCredentials: creds);
 
-            return new AuthenticationResponse
+            return new AuthenticationResponse()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 Expiration = expiration,

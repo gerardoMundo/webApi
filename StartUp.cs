@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using System.Text.Json.Serialization;
 using WebApi.DBContext;
 using WebApi.Filters;
@@ -31,11 +33,44 @@ namespace WebApi
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
+                                        options.TokenValidationParameters = new TokenValidationParameters
+                                        {
+                                            ValidateIssuer = false,
+                                            ValidateAudience = false,
+                                            ValidateLifetime = true,
+                                            ValidateIssuerSigningKey = true,
+                                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                                            .GetBytes(Configuration["JwtKey"])), 
+                                            ClockSkew = TimeSpan.Zero
+                                        });
 
             services.AddSwaggerGen(c => 
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" }); 
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearear",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header
+
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             }
             );
 
