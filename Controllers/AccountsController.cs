@@ -34,7 +34,7 @@ namespace WebApi.Controllers
 
             if(response.Succeeded)
             {
-                return BuildToken(userCredentials);
+                return await BuildToken(userCredentials);
             } 
             else
             {
@@ -49,7 +49,7 @@ namespace WebApi.Controllers
                                 isPersistent: false, lockoutOnFailure: false);
             if(result.Succeeded)
             {
-                return BuildToken(userCredentials);
+                return await BuildToken(userCredentials);
             }
             else
             {
@@ -59,21 +59,44 @@ namespace WebApi.Controllers
 
         [HttpGet("renewToken")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<AuthenticationResponse> Renew()
+        public async Task<ActionResult<AuthenticationResponse>> Renew()
         {
             var emailClaims = HttpContext.User.Claims.Where(claim => claim.Type == "Email").FirstOrDefault();//Permite obtener valores del JWT
             var email = emailClaims.Value;
 
             var userCredentials = new UserCredentials { Email = email };
-            return BuildToken(userCredentials);
+            return await BuildToken(userCredentials);
         }
 
-        private AuthenticationResponse BuildToken(UserCredentials userCredentials)
+        [HttpPost("create-admin")]
+        public async Task<ActionResult> CreateAdmin(EditUserDTO userDTO)
+        {
+            var newAdmin = await userManager.FindByEmailAsync(userDTO.Email);
+            await userManager.AddClaimAsync(newAdmin, new Claim("Admin", "Admin"));
+
+            return NoContent();
+        }
+
+        [HttpPost("remove-admin")]
+        public async Task<ActionResult> RemoveAdmin(EditUserDTO userDTO)
+        {
+            var newAdmin = await userManager.FindByEmailAsync(userDTO.Email);
+            await userManager.RemoveClaimAsync(newAdmin, new Claim("Admin", "true"));
+
+            return NoContent();
+        }
+
+        private async Task<AuthenticationResponse> BuildToken(UserCredentials userCredentials)
         {
             var claims = new List<Claim>()
             {
                 new Claim("Email", userCredentials.Email) 
             };
+
+            var user = await userManager.FindByEmailAsync(userCredentials.Email);
+            var claimsDB = await userManager.GetClaimsAsync(user);
+            claims.AddRange(claimsDB); //
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwtkey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

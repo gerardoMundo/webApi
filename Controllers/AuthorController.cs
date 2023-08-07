@@ -103,7 +103,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        //[Authorize(Policy = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var exists = await context.Authors.AnyAsync(author =>  author.Id == id);
