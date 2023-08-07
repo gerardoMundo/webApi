@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebApi.DBContext;
@@ -14,6 +15,7 @@ namespace WebApi
     {
         public StartUp(IConfiguration configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();//Limpiar el mapeo automático de los claims al solicitar data. 
             Configuration = configuration;
         }
 
@@ -79,6 +81,8 @@ namespace WebApi
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options => options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"))); // Añada una política para requerir roles de usuario
         }
 
         // Configure the HTTP request pipeline.

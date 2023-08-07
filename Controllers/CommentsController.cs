@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.DBContext;
@@ -13,11 +17,13 @@ namespace WebApi.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public CommentsController(ApplicationDbContext context, IMapper mapper)
+        public CommentsController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager)
         {
             this.context = context;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
 
@@ -46,8 +52,13 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Post( int bookId, CommentDTO commentDTO ) 
         {
+        var emailClaims = HttpContext.User.Claims.Where(claim => claim.Type == "Email").FirstOrDefault();//Permite obtener valores del JWT
+            var email = emailClaims.Value;
+        var user = await userManager.FindByEmailAsync(email);
+            var userId = user.Id;
         var bookExist =  await context.Books.AnyAsync(bookDB => bookDB.Id == bookId);
 
             if(!bookExist)
@@ -56,6 +67,7 @@ namespace WebApi.Controllers
             }
 
             var comment = mapper.Map<Comment>(commentDTO);
+            comment.UserId = userId;
             comment.BooksId = bookId;
             context.Add(comment);
             await context.SaveChangesAsync();

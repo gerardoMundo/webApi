@@ -103,15 +103,13 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete( int id)
+        //[Authorize(Policy = "Admin")]
+        public async Task<ActionResult> Delete(int id)
         {
-            var exists = context.Authors.AnyAsync(author =>  author.Id == id);
+            var exists = await context.Authors.AnyAsync(author =>  author.Id == id);
 
-            if (!await exists) 
-            {
-            return NotFound();
-            }
-
+            if (!exists) { return NotFound(); }
+            
             context.Remove(new Author { Id = id});
             await context.SaveChangesAsync();
             return Ok();
