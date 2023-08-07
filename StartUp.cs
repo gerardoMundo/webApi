@@ -81,8 +81,12 @@ namespace WebApi
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            // Añada una política para requerir roles de usuario
+            services.AddAuthorization(options => options.AddPolicy("Admin", policy => policy.RequireClaim("Admin")));
 
-            services.AddAuthorization(options => options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"))); // Añada una política para requerir roles de usuario
+            services.AddCors(options => options.AddDefaultPolicy(
+                                builder => builder.WithOrigins("").AllowAnyMethod())
+                            );
         }
 
         // Configure the HTTP request pipeline.
@@ -98,6 +102,8 @@ namespace WebApi
 
             app.UseRouting();
 
+            app.UseCors();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
