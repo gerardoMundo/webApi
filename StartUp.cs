@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using WebApi.DBContext;
 using WebApi.Filters;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -83,6 +84,10 @@ namespace WebApi
                 .AddDefaultTokenProviders();
             // Añada una política para requerir roles de usuario
             services.AddAuthorization(options => options.AddPolicy("Admin", policy => policy.RequireClaim("Admin")));
+
+            services.AddDataProtection();
+
+            services.AddTransient<HashService>();
 
             services.AddCors(options => options.AddDefaultPolicy(
                                 builder => builder.WithOrigins("").AllowAnyMethod())

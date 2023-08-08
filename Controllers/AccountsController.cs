@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApi.DTOs;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -17,13 +19,44 @@ namespace WebApi.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly HashService hashService;
+        private readonly IDataProtector dataProtector;
 
         public AccountsController(UserManager<IdentityUser> userManager, IConfiguration configuration, 
-                SignInManager<IdentityUser> signInManager)
+                SignInManager<IdentityUser> signInManager, IDataProtectionProvider dataProtectionProvider,
+                HashService hashService)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.signInManager = signInManager;
+            this.hashService = hashService;
+            dataProtector = dataProtectionProvider.CreateProtector("unique_and_secret_key");
+        }
+
+        [HttpGet("hash")]
+        public ActionResult GetHash()
+        {
+            string textoPlano = "Kiachunas Gavilan";
+            var codedText = dataProtector.Protect(textoPlano);
+            var decodedText = dataProtector.Unprotect(codedText);
+
+            return Ok(new
+            {
+                textoPlano, codedText, decodedText
+            });
+        }
+
+        [HttpGet("hash/{flatText}")]
+        public ActionResult MakeHash(string flatText)
+        {
+            var resultOne = hashService.HashTo(flatText);
+            var resultTwo = hashService.HashTo(flatText);
+
+            return Ok(new
+            {
+                resultOne,
+                resultTwo
+            });
         }
 
         [HttpPost("register")]
