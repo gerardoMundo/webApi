@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,6 +11,7 @@ using WebApi.DBContext;
 using WebApi.Filters;
 using WebApi.Services;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]// define documentación de respuestas para las peticiones
 namespace WebApi
 {
     public class StartUp

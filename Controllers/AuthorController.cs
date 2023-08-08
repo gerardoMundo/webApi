@@ -12,6 +12,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/author")]
+    [ApiConventionType(typeof(DefaultApiConventions))]// define documentación de respuestas para las peticiones
     public class AuthorController : ControllerBase
     {
         private readonly ApplicationDbContext context;
